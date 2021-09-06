@@ -1,0 +1,314 @@
+**To start mongodb server
+cd Program Files/mongodb/server/4.4/bin
+
+**to show existing databases
+show dbs
+
+**to create or use a database
+use --dbname
+
+**to drop database
+db.dropDatabase()
+
+**to create collections
+db.createCollection("users")
+
+**to delete collection
+db.coll.drop()
+//check if collection is dropped 
+
+
+CRUD operations:
+
+
+**Create or Insert operations
+**TO insert a single document
+db.users.insert({
+    name:"Anurag Gharat",
+    username:"anuraggharat",
+    phoneno:"7878787878",
+    email:"anuraggharat@gmail.com",
+    age:22,
+    status:"working"  
+})
+//A BSON ObjectID is a 12-byte value consisting of a 4-byte timestamp (seconds since epoch), a 3-byte machine id, a 2-byte process id, and a 3-byte counter
+a 4-byte timestamp value, representing the ObjectId's creation, measured in seconds since the Unix epoch
+a 5-byte random value
+a 3-byte incrementing counter, initialized to a random value
+
+**TO insert a single document using insertOne
+db.users.insertOne({
+    name:"Omkar Chalke",
+    username:"omkarchalke",
+    phoneno:"7878787879",
+    age:23,
+    email:"omkarchalke@gmail.com",
+    status:"busy"  
+})
+
+
+**TO insert a multiple documents using insert
+db.users.insertMany([
+{
+    name:"Sriujan Harihar",
+    username:"sriujanharihar",
+    phoneno:"7878787870",
+    email:"sriujanharihar@gmail.com",
+    age:21,
+    status:"available"  
+},
+{
+    name:"Ashutosh Agrawal",
+    username:"ashutoshagrawal",
+    phoneno:"7878787871",
+    email:"ashutoshagrawal@gmail.com",
+    age:24,
+    status:"enjoying"  
+},
+{
+    name:"Kruti Pandya",
+    username:"krutipandya",
+    phoneno:"7878787872",
+    email:"krutipandya@gmail.com",
+    age:22,
+    status:"busy"  
+},
+{
+    name:"Meet Thakkar",
+    username:"meetthakkar",
+    phoneno:"7878787873",
+    email:"meetthakkar@gmail.com",
+    age:21,
+    status:"working"  
+}
+])
+//In MongoDB, a write operation is atomic on the level of a single document, even if the operation modifies multiple embedded documents within a single document.
+
+**Read operations
+
+**returns single document
+db.users.findOne()
+
+**read all documents
+db.users.find()
+
+**read all documents in a pretty format
+db.users.find().pretty()
+
+**return documents matching specified condition
+db.users.find({username:"Anurag Gharat"}).pretty()
+
+
+**returns a document with specified conditions
+db.users.find({
+    $and:[
+        {
+            age:{$gt:20}
+        },
+        {
+            status:"working"
+        }
+    ]
+}).pretty()
+
+
+**return results only of specified fields
+db.users.find({},{name:1,username:1,_id:0}).pretty()
+
+**returns result in sorted manner(ascending order)
+db.users.find({},{name:1,username:1,_id:0}).sort({username:1}).pretty()
+
+
+
+//for showing array methods
+db.inventory.insertMany([
+   { item: "journal", qty: 25, tags: ["blank", "red"], dim_cm: [ 14, 21 ] },
+   { item: "notebook", qty: 50, tags: ["red", "blank"], dim_cm: [ 14, 21 ] },
+   { item: "paper", qty: 100, tags: ["red", "blank", "plain"], dim_cm: [ 14, 21 ] },
+   { item: "planner", qty: 75, tags: ["blank", "red"], dim_cm: [ 22.85, 30 ] },
+   { item: "postcard", qty: 45, tags: ["blue"], dim_cm: [ 10, 15.25 ] }
+]);
+
+** to check equality condition in array(only returns the exact document with matching condition)
+db.inventory.find( { tags: ["red", "blank"] } )
+
+** use $all to include all
+db.inventory.find( { tags: { $all: ["red", "blank"] } } )
+
+**to query a single document
+db.inventory.find( { tags: "red" } )
+
+**to query a filter on array
+db.inventory.find( { dim_cm: { $gt: 15, $lt: 20 } } )
+
+
+//Update 
+
+**update documents 
+db.users.update({username: 1}, {name: Anurag A Gharat})
+
+**update and set documents
+db.users.update(
+    {name:"Anurag A Gharat"},
+    {
+        $set:{
+            name:"Anurag Gharat",
+            username:"anuraggharat",
+            phoneno:"7878787878",
+            email:"anuraggharat@gmail.com",
+            age:22,
+            status:"working"  
+            }
+        }
+    )
+
+**using upsert
+db.users.update(
+    {username:"johndoe"},
+    {
+        $set:{
+            name:"John Doe",
+            username:"johndoe",
+            phoneno:"7878787875",
+            email:"johndoe@gmail.com",
+            age:32,
+            status:"busy"  
+            }
+        },
+        {
+            upsert:true
+        }
+    )
+
+    }
+)
+
+//For save, If the document contains _id, it will upsert querying the collection on the _id field, If not, it will insert.
+
+
+
+
+**Delete operations 
+db.users.drop()
+
+db.users.deleteMany({})
+db.users.delete({username:"anuraggharat"})
+
+delete and remove are same only difference is the value returned
+For save, If the document contains _id, it will upsert querying the collection on the _id field, If not, it will insert.
+
+
+Aggregation commands
+
+1.
+**single purpose Aggregation commands
+db.users.count()
+db.users.estimatedDocumentCount()
+db.users.countDocuments()
+db.users.distinct("age")
+returns an array of distinct values
+
+
+2.
+** Using aggregation pipeline
+we are creating a new posts collection
+db.createCollection("posts")
+
+db.posts.insertMany([
+    {
+    title: 'MongoDB Overview', 
+    description: 'MongoDB is nosql document oriented database. MongoDB’s document data model naturally supports JSON and its expressive query language is simple for developers to learn and use. Functionality such as automatic failover, horizontal scaling, and the ability to assign data to a location are built-in.',
+    by_user: 'anuraggharat',
+    tags: ['mongodb', 'database', 'NoSQL'],
+    likes: 100
+    },
+    {
+    title: 'MongoDB Agggregation', 
+    description: 'Aggregations operations process data records and return computed results. Aggregation operations group values from multiple documents together, and can perform a variety of operations on the grouped data to return a single result. In SQL count(*) and with group by is an equivalent of MongoDB aggregation.',
+    by_user: 'anuraggharat',
+    tags: ['mongodb', 'database', 'NoSQL','aggregation'],
+    likes: 120
+    },
+    {
+    title: 'MongoDB Geospatial', 
+    description: 'MongoDB supports query operations on geospatial data. This section introduces MongoDBs geospatial features.',
+    by_user: 'sriujanharihar',
+    tags: ['mongodb', 'database', 'NoSQL','aggregation','location'],
+    likes: 200
+    },
+    {
+    title: 'NoSQL Databases', 
+    description: 'NoSQL databases (aka "not only SQL") are non tabular, and store data differently than relational tables. NoSQL databases come in a variety of types based on their data model. The main types are document, key-value, wide-column, and graph. They provide flexible schemas and scale easily with large amounts of data and high user loads.',
+    by_user: 'ashutoshagrawal',
+    tags: ['mongodb', 'database', 'NoSQL','aggregation','location'],
+    likes: 900
+    },
+    {
+    title: 'Github', 
+    description: 'GitHub, Inc. is a provider of Internet hosting for software development and version control using Git. It offers the distributed version control and source code management functionality of Git, plus its own features',
+    by_user: 'meetthakkar',
+    tags: ['versioncontrol','git'],
+    likes: 100
+    },
+    {
+    title: 'Git Commands', 
+    description: 'GitHub, Inc. is a provider of Internet hosting for software development and version control using Git. It offers the distributed version control and source code management functionality of Git, plus its own features',
+    by_user: 'krutipandya',
+    tags: ['commands','git'],
+    likes: 200
+    },
+        {
+    title: 'React ', 
+    description: 'React is a free and open-source front-end JavaScript library for building user interfaces or UI components. It is maintained by Facebook and a community of individual developers and companies. React can be used as a base in the development of single-page or mobile applications.',
+    by_user: 'anuraggharat',
+    tags: ['react', 'js', 'HTML'],
+    likes: 400
+    },
+        {
+    title: 'Java', 
+    description: 'Java is a high-level, class-based, object-oriented programming language that is designed to have as few implementation dependencies as possible',
+    by_user: 'sriujanharihar',
+    tags: ['programming','java'],
+    likes: 220
+    },
+        {
+    title: 'Java EE', 
+    description: 'Jakarta EE, formerly Java Platform, Enterprise Edition and Java 2 Platform, Enterprise Edition is a set of specifications, extending Java SE with specifications for enterprise features such as distributed computing and web services',
+    by_user: 'krutipandya',
+    tags: ['Java EE', 'Java'],
+    likes: 200
+    },
+        {
+    title: 'Spring MVC', 
+    description: 'A Spring MVC is a Java framework which is used to build web applications. It follows the Model-View-Controller design pattern. It implements all the basic features of a core spring framework like Inversion of Control, Dependency Inject',
+    by_user: 'meetthakkar',
+    tags: ['java', 'java spring', 'spring','mvc'],
+    likes: 200
+    }
+])
+
+
+**get an aggregation of sum of likes
+db.posts.aggregate(
+    [
+        {
+            $group : {
+                _id : "$by_user", 
+                num_of_likes : {$sum : "$likes"}}
+        }
+    ]
+)
+
+db.posts.find({},{by_user:1,likes:1})
+
+db.posts.aggregate(
+    [
+        {
+            $group:{
+                _id:"$by_user",
+                total_posts:{$sum:1}
+            }
+        }
+    ]
+)
+//here we have grouped the user by by_user occurances
