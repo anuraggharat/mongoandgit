@@ -367,3 +367,23 @@ db.posts.aggregate(
         
     ]
 )
+
+Map reduce
+
+//mapping function
+var map=function(){
+    emit(this.by_user,this.likes)
+}
+
+//reducer function
+var red=function(key,values){
+    return Array.sum(values)
+}
+
+db.posts.mapReduce(
+   map,
+   red,
+   { out: "output" }
+)
+
+db.output.find().pretty()
