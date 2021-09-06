@@ -299,6 +299,38 @@ db.posts.aggregate(
     ]
 )
 
+//sort by likes
+db.posts.aggregate(
+    [
+        {
+            $group : {
+                _id : "$by_user", 
+                num_of_likes : {$sum : "$likes"}}
+        },
+        {
+            $sort:{num_of_likes:1}
+        }
+    ]
+)
+
+
+//using project
+db.posts.aggregate(
+    [
+        {
+            $project:{
+                Published_By:"$by_user",
+                title:"$title",
+                _id:0
+            }
+        },
+        {
+            $sort:{title:1}
+        }
+    ]
+)
+
+
 db.posts.find({},{by_user:1,likes:1})
 
 db.posts.aggregate(
@@ -312,3 +344,26 @@ db.posts.aggregate(
     ]
 )
 //here we have grouped the user by by_user occurances
+
+
+//here we are finding average
+db.posts.aggregate(
+    [
+        {
+            $group : {_id:"$by_user",average_likes:{$avg:"$likes"}}
+        }
+    ]
+)
+
+//here we are matching 
+db.posts.aggregate(
+    [   
+        {
+            $match : {by_user:"anuraggharat"}
+        },
+        {
+            $group : {_id:"$by_user",total_likes:{$sum:"$likes"}}
+        }
+        
+    ]
+)
