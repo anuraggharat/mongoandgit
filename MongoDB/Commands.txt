@@ -387,3 +387,18 @@ db.posts.mapReduce(
 )
 
 db.output.find().pretty()
+
+Step 1: Check the posts database
+db.posts.find({})
+
+Step 2: Create index for all the fields with data of string type
+db.posts.createIndex({"$**":"text"})
+
+Step 3: Search Query
+db.posts.find({$text:{$search:"sriujanharihar"}},{_id:0})
+
+Step 4: Exact Phrase match
+ db.posts.find({$text:{$search:"\"Java EE\""}},{_id:0})
+
+Step 5: To exclude a word
+db.posts.find({$text:{$search:"Java -EE"}},{_id:0})
