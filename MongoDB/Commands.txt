@@ -388,7 +388,7 @@ db.posts.mapReduce(
 
 db.output.find().pretty()
 
-Step 1: Check the posts database
+Step 1: Check the posts in the database(Posts database)
 db.posts.find({})
 
 Step 2: Create index for all the fields with data of string type
@@ -402,3 +402,9 @@ Step 4: Exact Phrase match
 
 Step 5: To exclude a word
 db.posts.find({$text:{$search:"Java -EE"}},{_id:0})
+
+Step 6: Implement Sorting
+db.posts.find(
+   { $text: { $search: "database" } },
+   { score: { $meta: "textScore" } }
+).sort( { score: { $meta: "textScore" } } )
