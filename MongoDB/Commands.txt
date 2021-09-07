@@ -1,5 +1,5 @@
 **To start mongodb server
-cd Program Files/mongodb/server/4.4/bin
+cd ../../Program Files/mongodb/server/4.4/bin/mongo
 
 **to show existing databases
 show dbs
