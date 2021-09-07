@@ -23,7 +23,7 @@ CRUD operations:
 
 **Create or Insert operations
 **TO insert a single document
-db.users.insert({
+db.users.insertOne({
     name:"Anurag Gharat",
     username:"anuraggharat",
     phoneno:"7878787878",
@@ -96,7 +96,11 @@ db.users.find()
 db.users.find().pretty()
 
 **return documents matching specified condition
-db.users.find({username:"Anurag Gharat"}).pretty()
+db.users.find(
+    {
+        username:"Anurag Gharat"
+    }
+).pretty()
 
 
 **returns a document with specified conditions
@@ -162,6 +166,20 @@ db.users.update(
         }
     )
 
+db.users.replaceOne(
+    {
+        username:"anuraggharat"
+    }, 
+    {
+        name:"Aniruddha Gharat",
+        username:"anigharat",
+        phoneno:"7878787878",
+        email:"anigharat@gmail.com",
+        age:18,
+        status:"working"  
+    }    
+)    
+
 **using upsert
 db.users.update(
     {username:"johndoe"},
@@ -211,6 +229,8 @@ returns an array of distinct values
 
 2.
 ** Using aggregation pipeline
+MongoDB's aggregation framework is modeled on the concept of data processing pipelines. 
+Documents enter a multi-stage pipeline that transforms the documents into an aggregated result.
 we are creating a new posts collection
 db.createCollection("posts")
 
@@ -292,9 +312,22 @@ db.posts.insertMany([
 db.posts.aggregate(
     [
         {
+            
+        },
+        {
             $group : {
                 _id : "$by_user", 
-                num_of_likes : {$sum : "$likes"}}
+                Total_likes : {$sum : "$likes"}}
+        }
+    ]
+)
+
+db.posts.aggregate(
+    [
+        {
+            $group : {
+                _id : "$by_user", 
+                totalposts : {$sum : 1}}
         }
     ]
 )
@@ -369,6 +402,9 @@ db.posts.aggregate(
 )
 
 Map reduce
+
+Map-reduce is a data processing paradigm for condensing large volumes of data into useful aggregated results. 
+To perform map-reduce operations, MongoDB provides the mapReduce database command.
 
 //mapping function
 var map=function(){
