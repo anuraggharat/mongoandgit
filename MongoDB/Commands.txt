@@ -388,6 +388,8 @@ db.posts.mapReduce(
 
 db.output.find().pretty()
 
+
+***Text Search***
 Step 1: Check the posts in the database(Posts database)
 db.posts.find({})
 
@@ -408,3 +410,51 @@ db.posts.find(
    { $text: { $search: "database" } },
    { score: { $meta: "textScore" } }
 ).sort( { score: { $meta: "textScore" } } )
+
+
+***Geospatial Queries***
+Step 1: Insert data
+db.places.insert( {
+    name: "Central Park",
+   location: { type: "Point", coordinates: [ -73.97, 40.77 ] },
+   category: "Parks"
+} );
+db.places.insert( {
+   name: "Sara D. Roosevelt Park",
+   location: { type: "Point", coordinates: [ -73.9928, 40.7193 ] },
+   category: "Parks"
+} );
+db.places.insert( {
+   name: "Polo Grounds",
+   location: { type: "Point", coordinates: [ -73.9375, 40.8303 ] },
+   category: "Stadiums"
+} );
+
+Step 2: Create index of type "2dsphere" on field index
+db.places.createIndex( { location: "2dsphere" } )
+
+Step 3: Use of $near operator
+db.places.find(
+   {
+     location:
+       { $near:
+          {
+            $geometry: { type: "Point",  coordinates: [ -73.9667, 40.78 ] },
+            $minDistance: 1000,
+            $maxDistance: 5000
+          }
+       }
+   }
+)
+
+Step 4:Use of $geoNear operator
+db.places.aggregate( [
+   {
+      $geoNear: {
+         near: { type: "Point", coordinates: [ -73.9667, 40.78 ] },
+         spherical: true,
+         query: { category: "Parks" },
+         distanceField: "calcDistance"
+      }
+   }
+] )
