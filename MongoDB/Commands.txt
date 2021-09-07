@@ -306,7 +306,7 @@ db.posts.insertMany([
     likes: 200
     }
 ])
-
+sdldvkn sdkbnosdmvpo
 
 **get an aggregation of sum of likes
 db.posts.aggregate(
