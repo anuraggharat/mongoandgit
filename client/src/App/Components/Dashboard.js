@@ -1,6 +1,7 @@
 import React,{useEffect, useState} from 'react'
 import DBService from '../Utils/DBService';
 import AddStudent from './AddStudent'
+import AllAsso from './AllAsso';
 import Navbar from './Navbar'
 
 
@@ -19,6 +20,8 @@ export default function Dashboard() {
 
     const [modal, setModal] = useState(false);
     const toggle = () => setModal(!modal);
+
+    const [edit,setEdit]=useState()
     return (
       <div>
         <Navbar user="Team3" />
@@ -205,45 +208,8 @@ export default function Dashboard() {
               </tbody>
             </table>
           </div>
-
-          <div className="container p-0 mt-5">
-            <h3>All Associates</h3>
-            <table className="table m-0">
-              <thead>
-                <tr className="bg-light">
-                  <th scope="col">Name</th>
-                  <th scope="col">React</th>
-                  <th scope="col">MongoDB</th>
-                  <th scope="col">JavaScript</th>
-                  <th scope="col">Average</th>
-                  <th scope="col">Total</th>
-                </tr>
-              </thead>
-              <tbody>
-
-                  <tr>
-                    <td>{"Anurag Gharat"}</td>
-                    <td>90</td>
-                    <td>90</td>
-                    <td>90</td>
-                    <td>90</td>
-                    <td>90</td>
-                  </tr>
-                  
-                  {data.map(user => (
-                    <tr>
-                      <td>{user.name}</td>
-                      <td>{user.subject1}</td>
-                      <td>{user.subject2}</td>
-                      <td>{user.subject3}</td>
-                      <td>{user.avg}</td>
-                      <td>{user.result}</td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+            <AllAsso data={data} />
+         </div>
       </div>
     );
 }
