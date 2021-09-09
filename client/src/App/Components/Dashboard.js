@@ -1,18 +1,30 @@
-import React,{useState} from 'react'
+import React,{useEffect, useState} from 'react'
+import DBService from '../Utils/DBService';
 import AddStudent from './AddStudent'
 import Navbar from './Navbar'
 
 
-export default function Dashboard({user,data}) {
+export default function Dashboard() {
 
-    console.log('====================================');
-    console.log(user);
-    console.log('====================================');
+    const [data, setData] = useState([]);
+    useEffect(()=>{
+      async function fetchData(){
+        let db = new DBService()
+        let docs = await db.find()
+        setData(docs)
+      }
+      fetchData();
+    }, [])
+
+    // console.log('====================================');
+    // console.log(user);
+    // console.log('====================================');
+
     const [modal, setModal] = useState(false);
     const toggle = () => setModal(!modal);
     return (
       <div>
-        <Navbar user={user} />
+        <Navbar user="Team3" />
         <AddStudent toggle={toggle} modal={modal} />
         <div className="container mt-4">
           <div className="container">
@@ -106,6 +118,17 @@ export default function Dashboard({user,data}) {
                     <td>90</td>
                     <td>90</td>
                   </tr>
+                  
+                  {data.map(user => (
+                    <tr>
+                      <td>{user.name}</td>
+                      <td>{user.subject1}</td>
+                      <td>{user.subject2}</td>
+                      <td>{user.subject3}</td>
+                      <td>{user.avg}</td>
+                      <td>{user.result}</td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>
