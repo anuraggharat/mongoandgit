@@ -10,16 +10,12 @@ export default function Dashboard() {
     useEffect(()=>{
       async function fetchData(){
         let db = new DBService()
-        let docs = await db.find()
-        setData(docs)
+        db.find().then(docs=>{
+          setData(docs)
+        })
       }
-      fetchData();
+        fetchData()
     }, [])
-
-    // console.log('====================================');
-    // console.log(user);
-    // console.log('====================================');
-
 
     const [modal, setModal] = useState(false);
     const toggle = () => setModal(!modal);

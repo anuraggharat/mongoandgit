@@ -1,5 +1,6 @@
 import conn from "./conn";
 import * as Realm from "realm-web";
+ 
 
 export default class DBService{
 
@@ -34,7 +35,6 @@ export default class DBService{
                     }
                 }
             ]     
-
         )
 
         console.log(output[0].result)
@@ -94,8 +94,47 @@ export default class DBService{
                 break;
             case "BOTTOM": result = await this.rank(1, column, N)
                 break;
-            return result;
         }
+        return result;
     }
 
+    async create(user){
+        console.log("creating")
+        try{
+            let create = await this.associates.insertOne(user);
+            return true
+
+        }catch(error){
+            console.log( error)
+        }
+
+    }
+
+    
+    async update(user){
+        try {
+            let update = await this.associates.updateOne({_id: user._id}, {$set: {
+                name: user.name,
+                ps: user.ps,
+                subject1: user.subject1,
+                subject2: user.subject2,
+                subject3: user.subject3,
+                avg: user.avg,
+                result: user.result
+            }})
+            return true
+        } catch (error) {
+            console.log( error)
+        }
+        
+    }
+
+    async delete(user){
+        try {
+            let del = await this.associates.deleteOne({name: user.name})
+            return true
+        } catch (error) {
+            console.log( error)
+        }
+    }
 }
