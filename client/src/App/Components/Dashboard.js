@@ -17,145 +17,118 @@ export default function Dashboard() {
       fetchData();
     }, [])
 
-    // console.log('====================================');
-    // console.log(user);
-    // console.log('====================================');
+    const [sortby,setSortby] = useState('');
+    const [display, setDisplay] = useState("");
+    const [value,setValue]=useState('')
+
+
+
+
+      const handleSort = (e) => {
+        
+        setSortby(e.target.value);
+      };
+
+      const handleDisplay =(e)=>{
+        setDisplay(e.target.value);
+
+      }
+
+      const handleChange=(e)=>{
+        setValue(e.target.value)
+      }
+
+
+
+    const sendData=()=>{
+    console.log(sortby);
+    console.log(display);
+    console.log(value);
+      }
+
 
 
     const [modal, setModal] = useState(false);
     const toggle = () => setModal(!modal);
 
-    const [edit,setEdit]=useState()
     return (
       <div>
         <Navbar user="Team3" />
         <AddStudent toggle={toggle} modal={modal} />
         <div className="container mt-4">
           <div className="container">
-            <div className="row mb-3 justify-content-between">
-              <div className="col-lg-4 p-0">
-                <div
-                  className="btn-group w-100"
-                  role="group"
-                  aria-label="Button group with nested dropdown"
-                >
-                  <button
-                    type="button"
-                    className="btn btn-outline-primary"
-                    onClick={() => toggle()}
+            <form>
+              <div className="row mb-3 justify-content-between">
+                <div className="col-lg-4 p-0">
+                  <div
+                    className="btn-group w-100"
+                    role="group"
+                    aria-label="Button group with nested dropdown"
                   >
-                    Add
-                  </button>
-                  <button type="button" className="btn btn-outline-primary">
-                    Generate
-                  </button>
+                    <button
+                      type="button"
+                      className="btn btn-outline-primary"
+                      onClick={() => toggle()}
+                    >
+                      Add
+                    </button>
+                    <button type="button" className="btn btn-outline-primary">
+                      Generate
+                    </button>
 
-                  <div class="btn-group" role="group">
-                    <button
-                      id="btnGroupDrop1"
-                      type="button"
-                      className="btn btn-outline-primary dropdown-toggle"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
+                    <select
+                      class="form-select"
+                      aria-label="Default select example"
+                      defaultValue={sortby}
+                      onChange={handleSort}
                     >
-                      Sort By
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                      <li>
-                        <a class="dropdown-item" href="#">
-                          Sub1
-                        </a>
-                      </li>
-                      <li>
-                        <a class="dropdown-item" href="#">
-                          Sub2
-                        </a>
-                      </li>
-                      <li>
-                        <a class="dropdown-item" href="#">
-                          Sub3
-                        </a>
-                      </li>
-                      <li>
-                        <a class="dropdown-item" href="#">
-                          Avg
-                        </a>
-                      </li>
-                      <li>
-                        <a class="dropdown-item" href="#">
-                          Result
-                        </a>
-                      </li>
-                    </ul>
+                      <option selected>Sort By</option>
+                      <option value="$min">Min</option>
+                      <option value="$max">Max</option>
+                      <option value="$avg">Avg</option>
+                      <option value="$gt">Greater than</option>
+                      <option value="$lt">Less than</option>
+                      <option value="TOP">Top n</option>
+                      <option value="BOTTOM">Bottom n</option>
+                    </select>
+                    <select
+                      class="form-select"
+                      aria-label="Default select example"
+                      defaultValue={display}
+                      onChange={handleDisplay}
+                    >
+                      <option selected>Display By</option>
+                      <option value="sub1">Sub1</option>
+                      <option value="sub2">Sub2</option>
+                      <option value="sub3">Sub3</option>
+                      <option value="avg">Avg</option>
+                      <option value="result">Result</option>
+                    </select>
                   </div>
-                  <div class="btn-group" role="group">
+                </div>
+                <div className="col-lg-4 p-0">
+                  <div className="input-group mb-3">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Enter Value"
+                      value={value}
+                      onChange={handleChange}
+                    />
                     <button
-                      id="btnGroupDrop1"
+                      className="btn btn-outline-primary"
                       type="button"
-                      className="btn btn-outline-primary dropdown-toggle"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
+                      id="button-addon2"
+                      onClick={()=>sendData()}
                     >
-                      Display
+                      Calculate
                     </button>
-                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                      <li>
-                        <a class="dropdown-item" href="#">
-                          Min
-                        </a>
-                      </li>
-                      <li>
-                        <a class="dropdown-item" href="#">
-                          Max
-                        </a>
-                      </li>
-                      <li>
-                        <a class="dropdown-item" href="#">
-                          Avg
-                        </a>
-                      </li>
-                      <li>
-                        <a class="dropdown-item" href="#">
-                          Greater than
-                        </a>
-                      </li>
-                      <li>
-                        <a class="dropdown-item" href="#">
-                          Less than
-                        </a>
-                      </li>
-                      <li>
-                        <a class="dropdown-item" href="#">
-                          Top n
-                        </a>
-                      </li>
-                      <li>
-                        <a class="dropdown-item" href="#">
-                          Botttom n
-                        </a>
-                      </li>
-                    </ul>
                   </div>
                 </div>
               </div>
-              <div className="col-lg-4 p-0">
-                <div className="input-group mb-3">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Enter Value"
-                  />
-                  <button
-                    className="btn btn-outline-primary"
-                    type="button"
-                    id="button-addon2"
-                  >
-                    Calculate
-                  </button>
-                </div>
-              </div>
-            </div>
+            </form>
           </div>
+
           <div className="container p-0">
             <table className="table table-success table-striped m-0">
               <thead>
@@ -212,8 +185,8 @@ export default function Dashboard() {
               </tbody>
             </table>
           </div>
-            <AllAsso data={data} />
-         </div>
+          <AllAsso data={data} />
+        </div>
       </div>
     );
 }
