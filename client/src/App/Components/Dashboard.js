@@ -8,15 +8,18 @@ import Navbar from './Navbar'
 export default function Dashboard() {
 
     const [data, setData] = useState([]);
-    useEffect(()=>{
+    const [topdata, setTopData] = useState([]);
+
       async function fetchData(){
         let db = new DBService()
         db.find().then(docs=>{
           setData(docs)
         })
-      }
+      }    
+      
+      useEffect(()=>{      
         fetchData()
-    }, [])
+      }, [])
 
     const [sortby,setSortby] = useState('');
     const [display, setDisplay] = useState("");
@@ -40,14 +43,19 @@ export default function Dashboard() {
       }
 
 
-
-    const sendData=()=>{
-    console.log(sortby);
-    console.log(display);
-    console.log(value);
-      }
-
-
+    const sendData=async ()=>{
+      console.log(sortby);
+      console.log(display);
+      console.log(value);
+      let db = new DBService()
+      let result = await db.operation(sortby,display, parseInt(value))
+    
+      if (typeof(result)=="object")  
+          setTopData(result)
+      else{
+          alert(result)
+      }      
+    }
 
     const [modal, setModal] = useState(false);
     const toggle = () => setModal(!modal);
@@ -55,7 +63,7 @@ export default function Dashboard() {
     return (
       <div>
         <Navbar user="Team3" />
-        <AddStudent toggle={toggle} modal={modal} />
+        <AddStudent toggle={toggle} modal={modal} fetchData={fetchData}/>
         <div className="container mt-4">
           <div className="container">
             <form>
@@ -99,9 +107,9 @@ export default function Dashboard() {
                       onChange={handleDisplay}
                     >
                       <option selected>Display By</option>
-                      <option value="sub1">Sub1</option>
-                      <option value="sub2">Sub2</option>
-                      <option value="sub3">Sub3</option>
+                      <option value="subject1">Sub1</option>
+                      <option value="subject2">Sub2</option>
+                      <option value="subject3">Sub3</option>
                       <option value="avg">Avg</option>
                       <option value="result">Result</option>
                     </select>
@@ -129,7 +137,7 @@ export default function Dashboard() {
               </div>
             </form>
           </div>
-
+          { topdata.length !== 0 ? 
           <div className="container p-0">
             <table className="table table-success table-striped m-0">
               <thead>
@@ -143,50 +151,21 @@ export default function Dashboard() {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>{"Anurag Gharat"}</td>
-                  <td>90</td>
-                  <td>90</td>
-                  <td>90</td>
-                  <td>90</td>
-                  <td>90</td>
-                </tr>
-                <tr>
-                  <td>{"Anurag Gharat"}</td>
-                  <td>90</td>
-                  <td>90</td>
-                  <td>90</td>
-                  <td>90</td>
-                  <td>90</td>
-                </tr>
-                <tr>
-                  <td>{"Anurag Gharat"}</td>
-                  <td>90</td>
-                  <td>90</td>
-                  <td>90</td>
-                  <td>90</td>
-                  <td>90</td>
-                </tr>
-                <tr>
-                  <td>{"Anurag Gharat"}</td>
-                  <td>90</td>
-                  <td>90</td>
-                  <td>90</td>
-                  <td>90</td>
-                  <td>90</td>
-                </tr>
-                <tr>
-                  <td>{"Anurag Gharat"}</td>
-                  <td>90</td>
-                  <td>90</td>
-                  <td>90</td>
-                  <td>90</td>
-                  <td>90</td>
-                </tr>
+                {topdata.map((user,idx) => (
+                  <tr key={idx}>
+                    <td>{user.name}</td>
+                    <td>{user.subject1}</td>
+                    <td>{user.subject2}</td>
+                    <td>{user.subject3}</td>
+                    <td>{user.avg}</td>
+                    <td>{user.result}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
-          <AllAsso data={data} />
+          :<div></div>}
+          <AllAsso data={data} fetchData ={fetchData}/>
         </div>
       </div>
     );

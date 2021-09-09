@@ -81,11 +81,13 @@ export default class DBService{
 
 
     async operation(operator, column, N=0){
-        let result;
+        let result, displayString;
+        console.log(operator, column, N);
         switch(operator) {
-            case "$min":
-            case "$max":
-            case "$avg": result = await this.stats(operator, column)
+            case "$min": displayString = `Minimum of ${column} is `
+            case "$max": displayString = `Maximum of ${column} is `
+            case "$avg": displayString = `Average of ${column} is `
+                result = displayString + await this.stats(operator, column)            
                 break;
             case "$gt":
             case "$lt": result = await this.compareByValue(operator, column, N)
@@ -99,7 +101,7 @@ export default class DBService{
     }
 
     async create(user){
-        console.log("creating")
+        
         try{
             let create = await this.associates.insertOne(user);
             return true
@@ -111,17 +113,9 @@ export default class DBService{
     }
 
     
-    async update(user){
+    async update(user, id){
         try {
-            let update = await this.associates.updateOne({_id: user._id}, {$set: {
-                name: user.name,
-                ps: user.ps,
-                subject1: user.subject1,
-                subject2: user.subject2,
-                subject3: user.subject3,
-                avg: user.avg,
-                result: user.result
-            }})
+            let update = await this.associates.updateOne({_id: id}, {$set: user})
             return true
         } catch (error) {
             console.log( error)
@@ -129,9 +123,9 @@ export default class DBService{
         
     }
 
-    async delete(user){
+    async delete(id){
         try {
-            let del = await this.associates.deleteOne({name: user.name})
+            let del = await this.associates.deleteOne({_id: id})
             return true
         } catch (error) {
             console.log( error)

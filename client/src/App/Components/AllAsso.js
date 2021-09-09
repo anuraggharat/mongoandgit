@@ -1,10 +1,10 @@
 import React,{useState} from 'react'
 import EditStudent from './EditStudent';
 
-export default function AllAsso({data}) {
+export default function AllAsso({data, fetchData}) {
 
-        const [modal, setModal] = useState(false);
-        const toggle = () => setModal(!modal);
+    const [modal, setModal] = useState(-1);
+    const toggle = () => setModal(-1);
 
     return (
       <div className="container p-0 mt-5">
@@ -21,19 +21,8 @@ export default function AllAsso({data}) {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>{"Anurag Gharat"}</td>
-              <td>90</td>
-              <td>90</td>
-              <td>90</td>
-              <td>90</td>
-              <td>90</td>
-            </tr>
-
-            {data.map((user) => (
-              <tr key={user._id} onClick={() => toggle()}>
-                <EditStudent toggle={toggle} modal={modal} user={user} />
-
+            {data.map((user, idx) => (
+              <tr key={idx} onClick={() => setModal(idx)}>
                 <td>{user.name}</td>
                 <td>{user.subject1}</td>
                 <td>{user.subject2}</td>
@@ -44,6 +33,8 @@ export default function AllAsso({data}) {
             ))}
           </tbody>
         </table>
+        {modal !=-1 && 
+        <EditStudent toggle={toggle} modal={modal !== -1} user={data[modal]} fetchData ={fetchData} />}
       </div>
     );
 }
