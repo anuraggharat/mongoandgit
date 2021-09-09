@@ -6,7 +6,7 @@ import Navbar from './Navbar'
 export default function Dashboard({user,data}) {
 
     console.log('====================================');
-    console.log(user);
+    console.log(data);
     console.log('====================================');
     const [modal, setModal] = useState(false);
     const toggle = () => setModal(!modal);
@@ -211,14 +211,16 @@ export default function Dashboard({user,data}) {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>{"Anurag Gharat"}</td>
-                  <td>90</td>
-                  <td>90</td>
-                  <td>90</td>
-                  <td>90</td>
-                  <td>90</td>
-                </tr>
+                {data && data.map((i, j) => (
+                    <tr key={j}>
+                      <td>{i.name}</td>
+                      <td>{i.subject1}</td>
+                      <td>{i.subject2}</td>
+                      <td>{i.subject3}</td>
+                      <td>{i.avg}</td>
+                      <td>{i.result}</td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>

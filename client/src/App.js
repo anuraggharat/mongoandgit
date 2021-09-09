@@ -35,7 +35,7 @@ const App = () => {
     console.log('====================================');
     console.log(obj);
     console.log('====================================');
-    //setData(obj)
+    
   }
 
   return (
