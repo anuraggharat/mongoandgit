@@ -1,5 +1,6 @@
 import conn from "./conn";
 import * as Realm from "realm-web";
+ 
 
 export default class DBService{
 
@@ -34,7 +35,6 @@ export default class DBService{
                     }
                 }
             ]     
-
         )
 
         console.log(output[0].result)
@@ -81,11 +81,13 @@ export default class DBService{
 
 
     async operation(operator, column, N=0){
-        let result;
+        let result, displayString;
+        console.log(operator, column, N);
         switch(operator) {
-            case "$min":
-            case "$max":
-            case "$avg": result = await this.stats(operator, column)
+            case "$min": displayString = `Minimum of ${column} is `
+            case "$max": displayString = `Maximum of ${column} is `
+            case "$avg": displayString = `Average of ${column} is `
+                result = displayString + await this.stats(operator, column)            
                 break;
             case "$gt":
             case "$lt": result = await this.compareByValue(operator, column, N)
@@ -94,8 +96,39 @@ export default class DBService{
                 break;
             case "BOTTOM": result = await this.rank(1, column, N)
                 break;
-            return result;
         }
+        return result;
     }
 
+    async create(user){
+        
+        try{
+            let create = await this.associates.insertOne(user);
+            return true
+
+        }catch(error){
+            console.log( error)
+        }
+
+    }
+
+    
+    async update(user, id){
+        try {
+            let update = await this.associates.updateOne({_id: id}, {$set: user})
+            return true
+        } catch (error) {
+            console.log( error)
+        }
+        
+    }
+
+    async delete(id){
+        try {
+            let del = await this.associates.deleteOne({_id: id})
+            return true
+        } catch (error) {
+            console.log( error)
+        }
+    }
 }
