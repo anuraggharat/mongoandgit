@@ -2,16 +2,28 @@ import React, { useState } from "react";
 import { Button, Modal, ModalHeader, ModalBody } from "reactstrap";
 
 export default function EditStudent({ modal, toggle,user }) {
-    console.log('====================================');
-    console.log(user);
-    console.log('====================================');
+
+  console.log(user,"From modal")
+
   const [values, setValues] = useState({
-    name:user.name,
-    sub1: user.subject1,
-    sub2: user.subject2,
-    sub3: user.subject3,
-    psno: user.ps,
+    name: "",
+    sub1: "",
+    sub2: "",
+    sub3: "",
+    psno: "",
   });
+
+
+  if(user){
+        setValues({
+          name: user.name,
+          sub1: user.subject1,
+          sub2: user.subject2,
+          sub3: user.subject3,
+          psno: user.ps,
+        });
+  }
+
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -29,7 +41,7 @@ export default function EditStudent({ modal, toggle,user }) {
   };
 
   return (
-    <Modal isOpen={modal} toggle={toggle} external={false}>
+    <Modal isOpen={modal} toggle={toggle} external={false} >
       <ModalHeader toggle={toggle}>Edit Associate</ModalHeader>
       <ModalBody>
         <div className="w-100">

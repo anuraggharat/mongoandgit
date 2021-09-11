@@ -5,9 +5,16 @@ export default function AllAsso({data}) {
 
         const [modal, setModal] = useState(false);
         const toggle = () => setModal(!modal);
+        const [current,setCurrent]=useState(null)
+
+    const openmodal=(user)=>{
+      setCurrent(user)
+      toggle()
+    }
 
     return (
       <div className="container p-0 mt-5">
+        <EditStudent toggle={toggle} modal={modal} />
         <h3>All Associates</h3>
         <table className="table m-0">
           <thead>
@@ -31,9 +38,7 @@ export default function AllAsso({data}) {
             </tr>
 
             {data.map((user) => (
-              <tr key={user._id} onClick={() => toggle()}>
-                <EditStudent toggle={toggle} modal={modal} user={user} />
-
+              <tr key={user._id} onClick={(user) => openmodal(user)}>
                 <td>{user.name}</td>
                 <td>{user.subject1}</td>
                 <td>{user.subject2}</td>
